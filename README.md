@@ -1,14 +1,60 @@
-# Invoice Extraction AI
+<div align="center">
 
-An AI-powered application that extracts structured data from invoice documents (PDFs and images), stores results in Supabase, and provides analytics dashboards on spending patterns.
+<img src="https://img.shields.io/badge/Invoice_Star-AI-c8f135?style=for-the-badge&logoColor=black" alt="Invoice Star AI" />
+
+# Invoice Star AI ⚡
+
+### AI-powered invoice data extraction, storage & analytics platform
+
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.4-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com)
+[![OpenAI](https://img.shields.io/badge/GPT--4o--mini-LLM-412991?style=flat-square&logo=openai&logoColor=white)](https://openai.com)
+
+[Live Demo](#) · [API Docs](#) · [Report Bug](../../issues) · [Request Feature](../../issues)
+
+</div>
 
 ---
 
-## Live Demo
+## What is Invoice Star AI?
 
-- **Frontend:** `https://invoice-ai.vercel.app` *(deploy yours with one click below)*
-- **API:** `https://invoice-ai-backend.onrender.com`
-- **API Docs:** `https://invoice-ai-backend.onrender.com/docs`
+Invoice Star AI is a full-stack application I built to eliminate the manual effort of processing invoices. Drop in a PDF or image — the system runs OCR, feeds the raw text to an LLM with a carefully engineered prompt, and returns clean structured JSON with vendor details, line items, totals, and a confidence score. Everything gets stored in Supabase and surfaced through an analytics dashboard that shows spend trends, top vendors, and currency breakdowns.
+
+Built with a focus on robustness: every stage has a fallback (pdfplumber → Tesseract, OpenAI → Gemini), and recurring invoice formats are fingerprinted and cached so the system gets faster and more accurate over time.
+
+---
+
+## Features
+
+- **Batch Upload** — drag & drop up to 20 PDF/JPG/PNG files at once
+- **OCR Pipeline** — native PDF text extraction with Tesseract fallback for scanned documents
+- **LLM Extraction** — GPT-4o-mini parses raw OCR into structured JSON (vendor, line items, totals, dates, currency)
+- **Confidence Scoring** — every extraction gets a 0–100% confidence score
+- **Format Templates** — recurring invoice layouts are fingerprinted and reused, improving speed and accuracy
+- **Duplicate Detection** — flags invoices with matching invoice number + vendor name
+- **Analytics Dashboard** — monthly spend trends, top vendors by spend, currency breakdown, processing stats
+- **Multi-currency** — detects USD, EUR, GBP, INR and more from symbols and context
+- **Real-time Status** — frontend polls processing status and updates the queue live
+- **LLM Fallback** — automatically retries with Google Gemini if OpenAI fails
+
+---
+
+## Tech Stack
+
+| Layer | Technology | Why |
+|-------|-----------|-----|
+| **Frontend** | React 18 + TypeScript + Vite | Fast DX, type safety, instant HMR |
+| **Styling** | Tailwind CSS + Recharts | Utility-first, charts out of the box |
+| **State** | Zustand | Lightweight, no boilerplate |
+| **Backend** | FastAPI + Python 3.11 | Async-native, auto-generated API docs |
+| **Validation** | Pydantic v2 | Schema enforcement at every layer |
+| **OCR** | pytesseract + pdfplumber + pdf2image | Free, offline, no API costs |
+| **LLM** | OpenAI GPT-4o-mini → Gemini (fallback) | Cost-efficient, strong JSON output |
+| **Database** | Supabase (PostgreSQL + JSONB) | Flexible schema, built-in storage, RLS |
+| **Deployment** | Render (backend) + Vercel (frontend) | Free tier friendly, Git-integrated |
 
 ---
 
@@ -16,113 +62,155 @@ An AI-powered application that extracts structured data from invoice documents (
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        Frontend (React)                      │
-│   Upload UI → Invoice List → Analytics Dashboard            │
-└───────────────────────────┬─────────────────────────────────┘
-                            │ REST API
-┌───────────────────────────▼─────────────────────────────────┐
-│                    Backend (FastAPI)                         │
-│                                                              │
-│  POST /invoices/upload                                       │
-│    │                                                         │
-│    ├─ 1. Validate file (type, size)                         │
-│    ├─ 2. Upload to Supabase Storage                         │
-│    ├─ 3. Create DB record (status: pending)                 │
-│    └─ 4. Queue background task                              │
-│              │                                              │
-│    Background Processing Pipeline:                          │
-│    ├─ OCR  ──→ pdfplumber (native PDF text)                 │
-│    │            └─ fallback: pdf2image + Tesseract          │
-│    ├─ Template Detection (format fingerprint match)         │
-│    ├─ LLM  ──→ OpenAI GPT-4o-mini                          │
-│    │            └─ fallback: Google Gemini                  │
-│    ├─ Validation (Pydantic schema enforcement)              │
-│    ├─ Duplicate Detection (invoice# + vendor match)         │
-│    └─ Save extracted JSON to Supabase DB                    │
-│                                                              │
-│  GET  /invoices/         → List all invoices                │
-│  GET  /invoices/{id}     → Get status + data                │
-│  GET  /analytics/summary → KPIs, trends, vendors            │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-┌───────────────────────────▼─────────────────────────────────┐
-│                      Supabase                                │
-│   PostgreSQL DB  │  File Storage  │  Row-Level Security      │
-│                                                              │
-│   Tables: invoices, format_templates                        │
-│   Views:  invoice_analytics, monthly_spend, vendor_spend    │
-│   Bucket: invoices (public)                                 │
+│                     React Frontend                          │
+│         Upload → Invoice List → Analytics Dashboard         │
+└──────────────────────────┬──────────────────────────────────┘
+                           │  REST  /api/v1
+┌──────────────────────────▼──────────────────────────────────┐
+│                    FastAPI Backend                          │
+│                                                             │
+│  POST /invoices/upload                                      │
+│     ├─ Validate (type, size)                               │
+│     ├─ Upload → Supabase Storage                           │
+│     ├─ Create DB record  (status: pending)                 │
+│     └─ Queue BackgroundTask ──────────────────────┐        │
+│                                                   ▼        │
+│                        Processing Pipeline:                 │
+│                        ├─ OCR: pdfplumber                  │
+│                        │       └─ fallback: Tesseract      │
+│                        ├─ Template fingerprint lookup      │
+│                        ├─ LLM: GPT-4o-mini                 │
+│                        │       └─ fallback: Gemini         │
+│                        ├─ Pydantic validation              │
+│                        ├─ Duplicate check                  │
+│                        └─ Save JSON → Supabase DB          │
+│                                                             │
+│  GET /invoices/          List + filter                      │
+│  GET /invoices/{id}      Status + extracted data           │
+│  GET /analytics/summary  KPIs, trends, vendors             │
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+┌──────────────────────────▼──────────────────────────────────┐
+│                       Supabase                              │
+│  PostgreSQL (JSONB)  │  File Storage  │  Row-Level Security │
+│  Tables: invoices, format_templates                         │
+│  Views:  monthly_spend, vendor_spend, invoice_analytics     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Tech Stack
+## Project Structure
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 18, TypeScript, Vite, Tailwind CSS, Recharts |
-| Backend | FastAPI, Python 3.11, Pydantic v2 |
-| OCR | Tesseract (pytesseract), pdfplumber, pdf2image |
-| LLM | OpenAI GPT-4o-mini (primary), Google Gemini (fallback) |
-| Database | Supabase (PostgreSQL + JSONB) |
-| Storage | Supabase Storage |
-| Deployment | Vercel (frontend), Render (backend) |
+```
+Invoice_Star-AI/
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── invoices.py         # Upload, status, list, delete
+│   │   │   ├── analytics.py        # Spend summary & vendor analytics
+│   │   │   └── health.py           # Health check endpoint
+│   │   ├── core/
+│   │   │   ├── config.py           # Environment & settings
+│   │   │   └── database.py         # Supabase client
+│   │   ├── models/
+│   │   │   └── invoice.py          # Pydantic schemas
+│   │   ├── services/
+│   │   │   ├── ocr_service.py      # Tesseract + pdfplumber pipeline
+│   │   │   ├── llm_service.py      # Prompt engineering + LLM parsing
+│   │   │   ├── template_service.py # Format fingerprinting + dedup
+│   │   │   ├── storage_service.py  # Supabase Storage upload
+│   │   │   └── invoice_service.py  # Full pipeline orchestrator
+│   │   └── main.py                 # FastAPI app entry
+│   ├── supabase_migration.sql      # DB schema + indexes + views
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── .env.example
+├── frontend/
+│   └── src/
+│       ├── pages/
+│       │   ├── UploadPage.tsx      # Dropzone + live processing queue
+│       │   ├── InvoicesPage.tsx    # Sortable table + detail panel
+│       │   └── AnalyticsPage.tsx   # KPI cards + charts
+│       ├── components/
+│       │   └── ui/InvoiceDetail.tsx
+│       ├── store/invoiceStore.ts   # Zustand + polling logic
+│       ├── lib/api.ts              # Typed API client
+│       └── types/index.ts
+├── test-data/                      # 3 sample invoices
+├── render.yaml                     # One-click Render deploy
+└── README.md
+```
 
 ---
 
-## Setup Instructions
+## Getting Started
 
 ### Prerequisites
 
-- Python 3.11+
-- Node.js 18+
-- Tesseract OCR installed (`brew install tesseract` / `apt install tesseract-ocr`)
-- Poppler (`brew install poppler` / `apt install poppler-utils`)
-- Supabase account
-- OpenAI API key (or Gemini key)
+| Tool | Version | Install |
+|------|---------|---------|
+| Python | 3.11+ | [python.org](https://python.org) |
+| Node.js | 18+ | [nodejs.org](https://nodejs.org) |
+| Tesseract OCR | latest | **Windows:** [UB-Mannheim installer](https://github.com/UB-Mannheim/tesseract/wiki) · **Mac:** `brew install tesseract` · **Linux:** `apt install tesseract-ocr` |
+| Poppler | latest | **Windows:** [oschwartz10612/releases](https://github.com/oschwartz10612/poppler-windows/releases) · **Mac:** `brew install poppler` · **Linux:** `apt install poppler-utils` |
 
-### 1. Supabase Setup
+You'll also need a [Supabase](https://supabase.com) account and an [OpenAI](https://platform.openai.com) API key (or Gemini key).
 
-1. Create a new Supabase project at [supabase.com](https://supabase.com)
-2. Go to **SQL Editor** and run the entire contents of `backend/supabase_migration.sql`
-3. Go to **Storage** → Create bucket named `invoices` (set to **Public**)
-4. Copy your project URL, anon key, and service role key
+---
 
-### 2. Backend Setup
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/YOUR_USERNAME/Invoice_Star-AI.git
+cd Invoice_Star-AI
+```
+
+### 2. Set up Supabase
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. Go to **SQL Editor** → paste and run the full contents of `backend/supabase_migration.sql`
+3. Go to **Storage** → create a bucket named `invoices`, set it to **Public**
+4. Copy your **Project URL**, **anon key**, and **service role key** from Project Settings → API
+
+### 3. Configure the backend
 
 ```bash
 cd backend
-
-# Copy and fill in your environment variables
 cp .env.example .env
-# Edit .env with your Supabase + OpenAI credentials
+```
 
-# Install dependencies
+Edit `.env`:
+
+```env
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-anon-key
+SUPABASE_SERVICE_KEY=your-service-role-key
+OPENAI_API_KEY=sk-...
+```
+
+### 4. Run the backend
+
+```bash
 pip install -r requirements.txt
-
-# Run the server
 uvicorn app.main:app --reload --port 8000
 ```
 
-The API will be available at `http://localhost:8000`  
-Interactive docs: `http://localhost:8000/docs`
+- API: `http://localhost:8000`
+- Interactive docs: `http://localhost:8000/docs`
 
-### 3. Frontend Setup
+### 5. Run the frontend
 
 ```bash
-cd frontend
-
-# Copy env
+cd ../frontend
 cp .env.example .env
-# VITE_API_URL=http://localhost:8000/api/v1
+# VITE_API_URL is already set to http://localhost:8000/api/v1
 
-# Install and run
 npm install
 npm run dev
 ```
 
-Frontend available at `http://localhost:5173`
+- App: `http://localhost:5173`
 
 ---
 
@@ -130,168 +218,149 @@ Frontend available at `http://localhost:5173`
 
 ### Backend → Render
 
-1. Push repo to GitHub
-2. Create a new **Web Service** on [render.com](https://render.com)
-3. Connect your repo, set root directory to `backend`
-4. Build command: `pip install -r requirements.txt`
-5. Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-6. Add all environment variables from `.env.example`
+The repo includes a `render.yaml` for automatic deployment:
 
-Or use the included `render.yaml` for one-click deploy.
+1. Push to GitHub
+2. Go to [render.com](https://render.com) → New → **Blueprint** → connect your repo
+3. Render picks up `render.yaml` automatically
+4. Add your env vars in the Render dashboard under the service's **Environment** tab
+
+**Or manually:** New Web Service → Root Dir: `backend` → Build: `pip install -r requirements.txt` → Start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 
 ### Frontend → Vercel
 
 ```bash
 cd frontend
 npx vercel --prod
-# Set VITE_API_URL to your Render backend URL
 ```
 
-Or connect GitHub repo to Vercel and set `VITE_API_URL` in project environment variables.
-
----
-
-## Key Design Decisions
-
-### 1. JSONB for Extracted Data
-Invoice schemas vary wildly between vendors. Using PostgreSQL JSONB for `extracted_data` allows flexible querying (GIN indexes for fast lookups) without schema migrations every time a new field is discovered. Analytics views layer on top to provide SQL-friendly aggregations.
-
-### 2. Prompt Engineering Strategy
-The LLM system prompt enforces:
-- **Vendor normalization**: "AMAZON.COM INC." → "Amazon"
-- **Date standardization**: All dates → ISO 8601 (YYYY-MM-DD)
-- **Currency detection**: From symbols (€ → EUR, ₹ → INR) and context
-- **Noise handling**: Explicit instruction to interpret garbled OCR intelligently
-- **Confidence scoring**: Forces the model to self-assess extraction quality (0.0–1.0)
-- **JSON-only output**: `response_format: json_object` (OpenAI) prevents markdown wrapping
-
-### 3. Format Template Reuse
-Invoices from the same vendor tend to have the same layout. A structural fingerprint (keyword presence, table detection, line density, average line length) is hashed and stored. When a matching format is seen again, a hint is injected into the LLM prompt improving accuracy and reducing token usage.
-
-### 4. OCR Pipeline Design
-- **Native PDF text first**: pdfplumber extracts embedded text instantly at zero cost
-- **Image OCR fallback**: Scanned PDFs and image invoices go through pdf2image → Tesseract
-- **DPI 200**: Balances OCR quality vs. processing speed for typical invoice scans
-
-### 5. Async Processing
-Files are queued as FastAPI `BackgroundTask`s immediately after upload. The frontend polls `/invoices/{id}` every 2 seconds. This keeps the upload endpoint snappy (< 200ms response) while processing happens behind the scenes.
-
-### 6. LLM Fallback Chain
-Primary: OpenAI → if fails: Gemini → if both fail: structured error returned. This ensures the system degrades gracefully rather than failing silently.
-
----
-
-## Assumptions & Limitations
-
-- **Language**: Currently optimized for English invoices. International invoices (e.g., German `Rechnung`) will extract correctly since GPT-4o-mini handles multilingual text, but date/number formatting edge cases may require tuning.
-- **OCR Quality**: Heavily distorted, handwritten, or low-DPI scans (< 150 DPI) will produce poor OCR text and low confidence scores.
-- **Tesseract**: Free but less accurate than Google Vision or AWS Textract on complex layouts. Swap `ocr_service.py` to use a cloud OCR for higher accuracy.
-- **Rate Limits**: OpenAI API rate limits apply. For high-volume batch processing, implement a queue (Redis + Celery) rather than `BackgroundTasks`.
-- **File Size**: Limited to 20MB per file. Supabase Storage free tier has a 1GB limit.
-- **Duplicate Detection**: Based on `invoice_number + vendor_name` match. Invoices without numbers can't be deduplicated this way.
-
----
-
-## Potential Improvements
-
-| Area | Improvement |
-|------|------------|
-| OCR | Swap Tesseract for Google Vision API / AWS Textract for +30% accuracy on complex layouts |
-| Queue | Replace BackgroundTasks with Celery + Redis for distributed processing |
-| Auth | Add Supabase Auth with JWT for multi-tenant support |
-| LLM Cost | Cache LLM responses for identical OCR text hashes; use template reuse to skip LLM for known formats |
-| Confidence | Fine-tune threshold logic; flag low-confidence fields for human review in the UI |
-| Vendor ML | Train a small classifier to normalize vendor names across variations |
-| Export | Add CSV/Excel export of extracted data |
-| Webhooks | POST to user-defined URLs when processing completes |
+Set `VITE_API_URL` to your Render backend URL in Vercel project → Settings → Environment Variables.
 
 ---
 
 ## API Reference
 
-### Upload Invoices
+<details>
+<summary><strong>POST /api/v1/invoices/upload</strong> — Upload invoices for processing</summary>
+
 ```
-POST /api/v1/invoices/upload
 Content-Type: multipart/form-data
+Body: files[] — PDF, JPG, PNG · max 20MB each · up to 20 files
 
-files: [file1.pdf, file2.jpg, ...]
-
-Response:
+Response 200:
 {
-  "batch_id": "uuid",
-  "total_files": 3,
-  "queued": 3,
+  "batch_id": "550e8400-e29b-41d4-a716",
+  "total_files": 2,
+  "queued": 2,
   "failed": [],
-  "invoice_ids": ["uuid1", "uuid2", "uuid3"]
+  "invoice_ids": ["uuid-1", "uuid-2"]
 }
 ```
+</details>
 
-### Get Invoice Status
+<details>
+<summary><strong>GET /api/v1/invoices/{id}</strong> — Poll processing status + extracted data</summary>
+
 ```
-GET /api/v1/invoices/{invoice_id}
-
-Response:
+Response 200:
 {
-  "invoice_id": "uuid",
+  "invoice_id": "uuid-1",
   "status": "completed",
   "data": {
-    "invoice_number": "INV-001",
-    "vendor_name": "Acme Corp",
-    "total_amount": 1500.00,
+    "invoice_number": "INV-2024-001",
+    "vendor_name": "TechFlow Solutions",
+    "invoice_date": "2024-03-15",
+    "due_date": "2024-04-14",
+    "line_items": [
+      { "description": "Cloud Setup", "quantity": 1, "unit_price": 3500.00, "total": 3500.00 }
+    ],
+    "subtotal": 11500.00,
+    "tax_amount": 920.00,
+    "total_amount": 12305.00,
     "currency": "USD",
-    "confidence_score": 0.92,
-    ...
+    "confidence_score": 0.94
   }
 }
 ```
+</details>
 
-### Analytics Summary
+<details>
+<summary><strong>GET /api/v1/analytics/summary</strong> — Spend analytics overview</summary>
+
 ```
-GET /api/v1/analytics/summary
-
-Response:
+Response 200:
 {
   "total_invoices": 142,
   "total_spend": 284750.00,
   "duplicate_invoices": 3,
-  "top_vendors": [...],
-  "monthly_trends": [...],
-  "currency_totals": {"USD": 200000, "EUR": 84750}
+  "top_vendors": [
+    { "vendor": "TechFlow Solutions", "total_spend": 84200.00, "invoice_count": 7 }
+  ],
+  "monthly_trends": [
+    { "month": "2024-01", "total_spend": 32400.00 }
+  ],
+  "currency_totals": { "USD": 200000.00, "EUR": 84750.00 }
 }
 ```
+</details>
+
+---
+
+## Design Decisions
+
+**JSONB for extracted data** — Invoice schemas vary wildly between vendors. JSONB lets me store any structure without schema migrations, while GIN indexes keep queries fast. SQL views layer on top for analytics aggregations.
+
+**Format template fingerprinting** — After processing a few invoices from the same vendor, the layout is always the same. I hash the structural signature (keyword presence, table detection, line density) and store it. Next time that format appears, a layout hint is injected into the LLM prompt — improving accuracy and cutting token usage.
+
+**OCR before cloud APIs** — pdfplumber extracts native PDF text in milliseconds at zero cost. Tesseract handles scanned images. Swapping to Google Vision or AWS Textract is a single file change if higher accuracy is ever needed.
+
+**Async background tasks** — The upload endpoint responds in < 200ms regardless of document complexity. OCR + LLM takes 3–15 seconds, so processing runs in the background. The frontend polls every 2 seconds to show live status updates.
 
 ---
 
 ## Test Data
 
-Three sample invoices are included in `test-data/`:
+Three sample invoices are in `test-data/` covering different formats and edge cases:
 
-| File | Vendor | Amount | Currency | Features |
-|------|--------|--------|----------|---------|
-| `invoice_techflow_001.html` | TechFlow Solutions | $12,305.00 | USD | 4 line items, discount, Net 30 |
-| `invoice_vertex_002.html` | Vertex Supplies Co. | $1,529.73 | USD | Receipt-style, minimal formatting |
-| `invoice_norddesign_003_EUR.html` | NordDesign GmbH | €23,800.00 | EUR | Bilingual (DE/EN), VAT, IBAN |
+| File | Vendor | Amount | Notes |
+|------|--------|--------|-------|
+| `invoice_techflow_001.html` | TechFlow Solutions | $12,305.00 | Standard US format, 4 line items, discount |
+| `invoice_vertex_002.html` | Vertex Supplies Co. | $1,529.73 | Monospace receipt-style, minimal structure |
+| `invoice_norddesign_003_EUR.html` | NordDesign GmbH | €23,800.00 | Bilingual DE/EN, VAT, IBAN bank details |
 
-Open these HTML files in a browser and print-to-PDF to generate test PDFs, or screenshot them for image testing.
-
----
-
-## Evaluation Criteria Mapping
-
-| Criterion | Implementation |
-|-----------|---------------|
-| **AI/ML Thinking (30%)** | Structured prompt engineering with normalization rules, confidence scoring, format fingerprinting with template injection, multi-provider LLM fallback |
-| **Engineering Quality (25%)** | FastAPI with async background processing, Pydantic v2 validation, typed React with Zustand, service layer separation |
-| **Robustness (20%)** | OCR fallback chain (pdfplumber → Tesseract), LLM fallback (OpenAI → Gemini), error handling at every layer, graceful partial failures in batch |
-| **Product Thinking (15%)** | Real-time processing queue UI, confidence badges, duplicate flagging, template reuse indicator, sortable invoice table |
-| **Deployment (10%)** | Dockerfile + render.yaml for backend, vercel.json for frontend, `/health` endpoint |
-| **Database Design (15%)** | JSONB + GIN indexes, analytics views (monthly_spend, vendor_spend), format_templates for learning, proper FK relationships |
-| **Scalability Thinking (10%)** | Stateless API, background task queue (upgradeable to Celery), paginated list endpoints, indexed queries |
-| **Analytics & Insights (10%)** | Monthly spend trends, top vendor spend bar chart, currency breakdown, processing status pie chart, KPI cards |
+Open in browser → **Print → Save as PDF** to generate test PDFs, or screenshot for image testing.
 
 ---
 
-## Contact
+## Known Limitations
 
-Built for the Invoice Extraction AI challenge.  
-Submission email: yashjeet.singh@avaipl.com
+- Heavily distorted or handwritten invoices will produce low confidence scores — OCR limitation, not the LLM
+- Duplicate detection requires an invoice number to be present
+- OpenAI rate limits apply on free tier — for high-volume processing, replace `BackgroundTasks` with Celery + Redis
+- Supabase free tier: 500MB database, 1GB storage
+
+---
+
+## What I'd Build Next
+
+- [ ] CSV / Excel export from the analytics dashboard
+- [ ] Email notifications on batch completion
+- [ ] Supabase Auth for multi-user support
+- [ ] Field-level confidence highlighting on the original document image
+- [ ] Swap Tesseract for Google Vision on high-accuracy mode
+- [ ] Celery + Redis queue for production-scale processing
+
+---
+
+## Author
+
+**Sai Prajapati**
+
+[![GitHub](https://img.shields.io/badge/GitHub-@YOUR__USERNAME-181717?style=flat-square&logo=github)](https://github.com/saiprajapati)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/sai-prajapati/)
+
+---
+
+<div align="center">
+<sub>Built with FastAPI · React · Supabase · OpenAI · Tesseract</sub>
+</div>
