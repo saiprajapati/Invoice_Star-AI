@@ -356,7 +356,7 @@ Open in browser → **Print → Save as PDF** to generate test PDFs, or screensh
 
 **Sai Prajapati**
 
-[![GitHub](https://img.shields.io/badge/GitHub-@YOUR__USERNAME-181717?style=flat-square&logo=github)](https://github.com/saiprajapati)
+[![GitHub](https://img.shields.io/badge/GitHub-@YOUR__saiprajapati-181717?style=flat-square&logo=github)](https://github.com/saiprajapati)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/sai-prajapati/)
 
 ---
