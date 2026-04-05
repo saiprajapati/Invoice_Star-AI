@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: Helvetica, Arial, sans-serif; max-width: 720px; margin: 40px auto; color: #1a1a2e; font-size: 13px; }
+  .top-bar { background: #16213e; color: white; padding: 20px 28px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; }
+  .content { border: 1px solid #dde; border-top: none; padding: 28px; border-radius: 0 0 8px 8px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .field-group { margin-bottom: 8px; }
+  .fl { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #888; }
+  .fv { font-weight: 600; margin-top: 2px; }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: #f0f2ff; }
+  th, td { padding: 10px 12px; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #555; text-align: left; }
+  td { border-bottom: 1px solid #eef; }
+  .total-section { float: right; width: 280px; margin-top: 16px; }
+  .total-section table { border: 1px solid #dde; border-radius: 6px; overflow: hidden; }
+  .total-section td { border-bottom: 1px solid #eef; padding: 7px 14px; }
+  .grand td { background: #16213e; color: white; font-weight: bold; font-size: 14px; }
+  .badge { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 2px 10px; border-radius: 20px; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <div style="font-size:20px;font-weight:bold;">NordDesign GmbH</div>
+    <div style="opacity:0.7;margin-top:4px;">Karlstraße 45, 80333 München, Deutschland</div>
+    <div style="opacity:0.7;">USt-IdNr: DE298847123</div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-size:28px;font-weight:bold;letter-spacing:2px;">RECHNUNG</div>
+    <div style="opacity:0.7;margin-top:4px;">Invoice / Factura</div>
+    <span class="badge" style="background:#c8f135;color:#1a1a2e;margin-top:6px">OUTSTANDING</span>
+  </div>
+</div>
+
+<div class="content">
+  <div class="grid2">
+    <div>
+      <div class="field-group"><div class="fl">Invoice Number</div><div class="fv">ND-2024-1183</div></div>
+      <div class="field-group"><div class="fl">Invoice Date</div><div class="fv">15. März 2024 (2024-03-15)</div></div>
+      <div class="field-group"><div class="fl">Due Date</div><div class="fv">2024-04-14</div></div>
+      <div class="field-group"><div class="fl">Payment Terms</div><div class="fv">30 Tage netto / Net 30</div></div>
+    </div>
+    <div>
+      <div class="field-group"><div class="fl">Billed To / Rechnungsempfänger</div>
+        <div class="fv">Stratford Partners LLP</div>
+        <div>22 Bishopsgate, London EC2N 4BQ</div>
+        <div>United Kingdom</div>
+        <div>finance@stratfordpartners.co.uk</div>
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Description / Beschreibung</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>VAT</th>
+        <th style="text-align:right">Amount (EUR)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>UX/UI Design System — Phase 2</td>
+        <td>1</td>
+        <td>€8,400.00</td>
+        <td>19%</td>
+        <td style="text-align:right">€8,400.00</td>
+      </tr>
+      <tr>
+        <td>Frontend Development (React) — 60h</td>
+        <td>60</td>
+        <td>€120.00</td>
+        <td>19%</td>
+        <td style="text-align:right">€7,200.00</td>
+      </tr>
+      <tr>
+        <td>Brand Identity Package</td>
+        <td>1</td>
+        <td>€2,500.00</td>
+        <td>19%</td>
+        <td style="text-align:right">€2,500.00</td>
+      </tr>
+      <tr>
+        <td>Project Management & Coordination</td>
+        <td>20</td>
+        <td>€95.00</td>
+        <td>19%</td>
+        <td style="text-align:right">€1,900.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="total-section">
+    <table>
+      <tr><td>Netto / Subtotal</td><td style="text-align:right">€20,000.00</td></tr>
+      <tr><td>MwSt. / VAT (19%)</td><td style="text-align:right">€3,800.00</td></tr>
+      <tr class="grand"><td>GESAMT / TOTAL</td><td style="text-align:right">€23,800.00</td></tr>
+    </table>
+  </div>
+
+  <div style="clear:both;padding-top:60px;font-size:11px;color:#888;border-top:1px solid #eef;margin-top:20px">
+    Bank: Commerzbank AG · IBAN: DE89 3704 0044 0532 0130 00 · BIC: COBADEFFXXX<br>
+    Bitte überweisen Sie den Betrag unter Angabe der Rechnungsnummer ND-2024-1183.<br>
+    Please wire payment referencing invoice ND-2024-1183.
+  </div>
+</div>
+
+</body>
+</html>

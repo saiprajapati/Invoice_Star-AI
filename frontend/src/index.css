@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #0d0d0d;
+    color: #e8e8e8;
+    font-family: 'Syne', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track { background: #1a1a1a; }
+  ::-webkit-scrollbar-thumb { background: #3d3d3d; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #c8f135; }
+}
+
+@layer components {
+  .card {
+    @apply bg-ink-800 border border-ink-700 rounded-xl;
+  }
+
+  .btn-primary {
+    @apply bg-acid text-ink font-semibold px-5 py-2.5 rounded-lg
+           hover:bg-acid-light transition-colors duration-150
+           disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply text-ink-300 px-4 py-2 rounded-lg hover:bg-ink-700
+           hover:text-ink-100 transition-colors duration-150;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-pending   { @apply badge bg-ink-700 text-ink-300; }
+  .badge-processing { @apply badge bg-amber-900/50 text-amber-400 animate-pulse-slow; }
+  .badge-completed  { @apply badge bg-emerald-900/50 text-emerald-400; }
+  .badge-failed     { @apply badge bg-red-900/50 text-red-400; }
+}
+
+/* Dropzone animation */
+.drop-active {
+  background: linear-gradient(135deg, #1a1a1a 0%, #1e2a0a 100%);
+  border-color: #c8f135 !important;
+}
+
+/* Table striping */
+.data-table tr:nth-child(even) td { background-color: rgba(255,255,255,0.02); }

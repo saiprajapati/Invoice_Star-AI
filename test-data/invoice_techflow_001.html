@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; color: #222; font-size: 13px; }
+  .header { display: flex; justify-content: space-between; margin-bottom: 30px; }
+  .logo { font-size: 24px; font-weight: bold; color: #1a56db; }
+  .invoice-title { font-size: 28px; font-weight: bold; color: #555; }
+  .invoice-meta { text-align: right; }
+  .section { margin-bottom: 20px; }
+  .label { font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 2px; }
+  .value { font-weight: 500; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+  th { background: #f0f4ff; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; color: #555; }
+  td { padding: 8px 12px; border-bottom: 1px solid #eee; }
+  .totals { margin-left: auto; width: 260px; }
+  .totals tr td { border: none; padding: 4px 8px; }
+  .totals .grand-total td { font-weight: bold; font-size: 15px; border-top: 2px solid #222; padding-top: 8px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">TechFlow Solutions</div>
+    <div>123 Silicon Valley Blvd<br>San Francisco, CA 94105<br>billing@techflow.io<br>+1 (415) 555-0192</div>
+  </div>
+  <div class="invoice-meta">
+    <div class="invoice-title">INVOICE</div>
+    <div style="margin-top:8px">
+      <div class="label">Invoice Number</div>
+      <div class="value">TF-2024-00847</div>
+    </div>
+    <div style="margin-top:8px">
+      <div class="label">Invoice Date</div>
+      <div class="value">March 15, 2024</div>
+    </div>
+    <div style="margin-top:8px">
+      <div class="label">Due Date</div>
+      <div class="value">April 14, 2024</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="label">Bill To</div>
+  <div class="value">Acme Corporation</div>
+  <div>Attn: Accounts Payable</div>
+  <div>456 Corporate Park, Suite 300</div>
+  <div>New York, NY 10001</div>
+  <div>accounts@acmecorp.com</div>
+</div>
+
+<div>
+  <div class="label">Tax ID</div>
+  <div class="value">47-1234567</div>
+</div>
+<br>
+<div>
+  <div class="label">Payment Terms</div>
+  <div class="value">Net 30</div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Qty</th>
+      <th>Unit Price</th>
+      <th>Tax</th>
+      <th style="text-align:right">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Cloud Infrastructure Setup (AWS)</td>
+      <td>1</td>
+      <td>$3,500.00</td>
+      <td>8%</td>
+      <td style="text-align:right">$3,500.00</td>
+    </tr>
+    <tr>
+      <td>Software Development - API Integration</td>
+      <td>40</td>
+      <td>$150.00</td>
+      <td>8%</td>
+      <td style="text-align:right">$6,000.00</td>
+    </tr>
+    <tr>
+      <td>Monthly SaaS License - Enterprise Plan</td>
+      <td>1</td>
+      <td>$1,200.00</td>
+      <td>8%</td>
+      <td style="text-align:right">$1,200.00</td>
+    </tr>
+    <tr>
+      <td>Technical Support & Maintenance (March)</td>
+      <td>1</td>
+      <td>$800.00</td>
+      <td>8%</td>
+      <td style="text-align:right">$800.00</td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="totals">
+  <tr><td>Subtotal</td><td style="text-align:right">$11,500.00</td></tr>
+  <tr><td>Tax (8%)</td><td style="text-align:right">$920.00</td></tr>
+  <tr><td>Discount (Early Pay)</td><td style="text-align:right">-$115.00</td></tr>
+  <tr class="grand-total"><td>TOTAL DUE</td><td style="text-align:right">$12,305.00</td></tr>
+</table>
+
+<hr style="border:none;border-top:1px solid #eee;margin:30px 0">
+<p style="color:#888;font-size:11px">
+  Please make payment to: TechFlow Solutions · Bank: Chase · Routing: 021000021 · Account: 8847210093<br>
+  Reference invoice number TF-2024-00847 on all payments. Questions? billing@techflow.io
+</p>
+
+</body>
+</html>
